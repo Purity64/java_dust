@@ -205,25 +205,22 @@ public class Btn_action {
     }
 
 
-    private void BtnMap_Hover(ArrayList<String> arr ,Color cor){
-        for (int i = 0; i < btn_list.size(); i++) {
-            RoundeBtn btn = btn_list.get(i);
-            int main_x = btn.getX_location();
-            int main_y = btn.getY_location();
-            for(String a : arr){
-                String text[] = a.split(",");
+    private void BtnMap_Hover(ArrayList<String> arr, Color cor) {
+        // 1. วนลูปตามพิกัดเป้าหมายใน arr แทนการวนปุ่ม 800 ปุ่ม
+        for (String a : arr) {
+            String[] text = a.split(",");
+            int arr_X = Integer.parseInt(text[0]);
+            int arr_Y = Integer.parseInt(text[1]);
 
-                int arr_X = Integer.parseInt(text[0]) ;
-                int arr_Y = Integer.parseInt(text[1]);
+            if (arr_X < 0 || arr_Y < 0) continue;
 
-                if (arr_X < 0 || arr_Y < 0) continue;
-
-                if (main_x == arr_X && arr_Y == main_y) {
-                    System.out.println(cor.toString());
-
+            // 2. ค้นหาปุ่มที่พิกัดตรงกันใน btn_list
+            for (RoundeBtn btn : btn_list.values()) {
+                if (btn != null && btn.getX_location() == arr_X && btn.getY_location() == arr_Y) {
                     btn.setBackground(cor);
+                    btn.repaint(); // สั่งให้ Swing วาดสีใหม่บนหน้าจอทันที
+                    break; // เจอแล้วข้ามไปทำพิกัดถัดไปได้เลย ไม่ต้องวนหาต่อ
                 }
-
             }
         }
     }

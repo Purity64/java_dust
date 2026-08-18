@@ -49,6 +49,7 @@ public class RoundeBtn extends JButton {
         setFocusPainted(false);
         setBorderPainted(false);
         setBackground(Color.WHITE);
+        setOpaque(false);
         setFont(new Font("Leelawadee UI", Font.PLAIN, 20));
 
         if (this.isRandom) {
@@ -95,7 +96,7 @@ public class RoundeBtn extends JButton {
             }else{
                 setBackground(Color.white);
             }
-            
+            return;
         }
 
         if (this.person <= 0) return;
@@ -194,29 +195,25 @@ public class RoundeBtn extends JButton {
         if (onShadow) {
             g2.setColor(shadowColor);
             g2.fillRoundRect(
-                shadowSize / 2,         
-                shadowSize,              
-                btnWidth,     
-                btnHeight,     
+                shadowSize / 2, 
+                shadowSize, 
+                btnWidth, 
+                btnHeight, 
                 cornerRadius, 
                 cornerRadius
             );
         }
 
         Color bg = getBackground() != null ? getBackground() : Color.WHITE;
-        if (!Config.btn_togat_rain_make) {
-            if (getModel().isPressed()) {
-                g2.setColor(bg.darker());
-            } else if (getModel().isRollover()) {
-                g2.setColor(bg.brighter());
-            } else {
-                g2.setColor(bg);
-            }
+        if (!Config.btn_togat_rain_make && getModel().isPressed()) {
+            g2.setColor(bg.darker());
+        } else if (!Config.btn_togat_rain_make && getModel().isRollover()) {
+            g2.setColor(bg.brighter());
+        } else {
+            g2.setColor(bg); 
         }
 
-
         g2.fillRoundRect(0, 0, btnWidth, btnHeight, cornerRadius, cornerRadius);
-
         g2.dispose();
 
         super.paintComponent(g);
