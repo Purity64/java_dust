@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,6 +16,7 @@ import util.RoundedTextField;
 public class Btn_action {
     private Map<Integer, RoundeBtn> btn_list;
     private Map<String, Component> componentMap;
+    private List<RoundeBtn> activeHoverBtns = new ArrayList<>();
     public Btn_action(Map<String, Component>  componentMap, Map<Integer, RoundeBtn> btn_list  , Set_text set_text){
         this.btn_list = btn_list;
         this.componentMap = componentMap;
@@ -52,7 +54,7 @@ public class Btn_action {
                     @Override
                     public void mouseExited(MouseEvent e) {
                         if (Config.btn_togat_rain_make) {
-                            resetAllButtonBackgrounds(); 
+                            clearHoverEffects(); 
                         }
                     }
                 });
@@ -206,7 +208,8 @@ public class Btn_action {
 
 
     private void BtnMap_Hover(ArrayList<String> arr, Color cor) {
-        // 1. วนลูปตามพิกัดเป้าหมายใน arr แทนการวนปุ่ม 800 ปุ่ม
+        int GRID_COLS = 40; 
+
         for (String a : arr) {
             String[] text = a.split(",");
             int arr_X = Integer.parseInt(text[0]);
@@ -214,15 +217,25 @@ public class Btn_action {
 
             if (arr_X < 0 || arr_Y < 0) continue;
 
-            // 2. ค้นหาปุ่มที่พิกัดตรงกันใน btn_list
-            for (RoundeBtn btn : btn_list.values()) {
-                if (btn != null && btn.getX_location() == arr_X && btn.getY_location() == arr_Y) {
-                    btn.setBackground(cor);
-                    btn.repaint(); // สั่งให้ Swing วาดสีใหม่บนหน้าจอทันที
-                    break; // เจอแล้วข้ามไปทำพิกัดถัดไปได้เลย ไม่ต้องวนหาต่อ
-                }
+            int index = (arr_X * GRID_COLS) + arr_Y; 
+            RoundeBtn btn = btn_list.get(index);
+
+            if (btn != null) {
+                btn.setBackground(cor);
+                btn.repaint();
+                activeHoverBtns.add(btn); 
             }
         }
+    }
+
+    private void clearHoverEffects() {
+        for (RoundeBtn btn : activeHoverBtns) {
+            if (btn != null) {
+                btn.resetBackground();
+                btn.repaint();
+            }
+        }
+        activeHoverBtns.clear(); 
     }
 
     private void resetAllButtonBackgrounds() {
