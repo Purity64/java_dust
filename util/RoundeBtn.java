@@ -86,7 +86,7 @@ public class RoundeBtn extends JButton {
         int pm_per = ThreadLocalRandom.current().nextInt(min, max + 1);
         this.badperson = (int) Math.round((double) this.person * pm_per / 100.0);
         this.badperson_per = pm_per ;
-        resetBackground();
+        if(!Config.btn_togat_rain_make) resetBackground();
     }
 
     public void resetBackground() {

@@ -30,6 +30,7 @@ public class Btn_action {
         btn_submit_input_file.addActionListener(e -> {
             fileChooser.selectAndReadFile(btn_submit_input_file);
             set_btn_view_pm.SetPm();
+            set_text.setDetail_data();
         });
 
         for (int i = 0; i < btn_list.size(); i++) {
@@ -37,10 +38,16 @@ public class Btn_action {
             RoundeBtn btn = GetComponentBtn(i);
             if (btn != null) {
                 btn.addActionListener(e -> {
-                    Config.activate_btn = index;
-                    if (Config.btn_togat_rain_make)makerain(btn.getX_location(), btn.getY_location());
-                    
-                    set_text.setDetail_data();             
+                    if (Config.btn_togat_rain_make){
+                        makerain(btn.getX_location(), btn.getY_location());
+                        RoundeBtn btn_temp = GetComponentBtn(Config.activate_btn);
+                        Config.activate_btn = -1;
+                        btn_temp.resetBackground();
+                        set_text.setDetail_data(); 
+                    }else{
+                        Config.activate_btn = index;
+                        set_text.setDetail_data();   
+                    }
                 });
 
                 btn.addMouseListener(new MouseAdapter() {
@@ -107,8 +114,12 @@ public class Btn_action {
 
         // ฝนธรรมชาติ
         RoundeBtn rain_naternallBtn = switchType(GetComponent("btn_center_Rain"));
-
+        RoundeBtn rain_make_Btn = switchType(GetComponent("btn_center_Rain_make"));
         rain_naternallBtn.addActionListener(e -> {
+            clearHoverEffects();
+            Config.btn_togat_rain_make = false;
+            rain_make_Btn.resetBackground();
+            
             RoundeBtn btn;
             for (int i = 0; i < 800; i++) {
                 btn = GetComponentBtn(i);
@@ -122,14 +133,13 @@ public class Btn_action {
                 btn.setPm(newPm);
                 btn.calculatePerson();
 
-                if (Config.activate_btn == btn.getIndex() && Config.activate_btn != 0) {
-                    set_text.setDetail_data();
-                }
+
             }
+            set_text.setDetail_data();
         });
 
         //ฝนเทียม
-        RoundeBtn rain_make_Btn = switchType(GetComponent("btn_center_Rain_make"));
+        
         rain_make_Btn.addActionListener(e -> {
             Config.btn_togat_rain_make = !Config.btn_togat_rain_make;
             rain_make_Btn.resetBackground();
@@ -192,7 +202,6 @@ public class Btn_action {
                 if (main_x == arr_X && arr_Y == main_y) {
                     int basePm = btn.getPm();
                     btn.setPm(basePm - Math.round(basePm * pm_per / 100));
-                    btn.resetBackground();
                 }
 
             }
@@ -238,14 +247,7 @@ public class Btn_action {
         activeHoverBtns.clear(); 
     }
 
-    private void resetAllButtonBackgrounds() {
-        for (int i = 0; i < btn_list.size(); i++) {
-            RoundeBtn btn = btn_list.get(i);
-            if (btn != null) {
-                btn.resetBackground();
-            }
-        }
-    }
+
         
 
 

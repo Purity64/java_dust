@@ -16,8 +16,7 @@ public class Set_text {
     }
     
     public void setDetail_data(){
-        int index =  Config.activate_btn;
-        RoundeBtn btn_click = btn_list.get(index);
+
         JLabel title = swiptype_as_Jlable(componentMap.get("lbl_detail_title")); 
         JLabel pm_val = swiptype_as_Jlable(componentMap.get("lbl_pm_val")); 
         JLabel person = swiptype_as_Jlable(componentMap.get("lbl_total_val")); 
@@ -25,21 +24,79 @@ public class Set_text {
         JLabel lbl_sick_val = swiptype_as_Jlable(componentMap.get("lbl_sick_val")); 
         JLabel lbl_per_val = swiptype_as_Jlable(componentMap.get("lbl_ratio_val")); 
 
-        int person_val = btn_click.getPerson();
-        int badoerson = btn_click.GetBadPerson();
-        int healthy = person_val - badoerson;
-        int pm = btn_click.getPm();
-        title.setText("รายละเอียดพื้นที่ : " + btn_click.getName());
-        if (pm == -1) {
-            pm_val.setText("0 pm");
-        }else{
-            pm_val.setText(String.valueOf(pm) + " pm");
+        int index =  Config.activate_btn;
+                
+
+        int person_val = 0;
+        int badoerson = 0 ;
+        int healthy = 0;
+        int pm  = 0;
+        int BadPerson_pser = 0;
+        if (index >= 0) {
+            RoundeBtn btn_click = btn_list.get(index);
+            if (btn_click != null) {
+                person_val = btn_click.getPerson();
+                badoerson = btn_click.GetBadPerson();
+                healthy = person_val - badoerson;
+                pm = btn_click.getPm();
+                BadPerson_pser = btn_click.GetBadPerson_per();
+
+                title.setText("รายละเอียดพื้นที่ : " + btn_click.getName());
+                if (pm < 0) {
+                    pm_val.setText("0 pm");
+                } else {
+                    pm_val.setText(pm + " pm");
+                }
+            }
+        } else {
+            int sumperson = 0;
+            int sumbadoerson = 0;
+            int sumpm = 0;
+            int validPmCount = 0; // นับเฉพาะปุ่มที่มีข้อมูลฝุ่นจริง
+
+            for (int i = 0; i < btn_list.size(); i++) {
+                RoundeBtn btn = btn_list.get(i);
+                if (btn != null) {
+                    sumperson += btn.getPerson();
+                    sumbadoerson += btn.GetBadPerson();
+
+                    int currentPm = btn.getPm();
+                    if (currentPm >= 0) { // นับเฉพาะค่าฝุ่นที่ไม่ใช่ -1
+                        sumpm += currentPm;
+                        validPmCount++;
+                    }
+                }
+            }
+
+            person_val = sumperson;
+            badoerson = sumbadoerson;
+            healthy = sumperson - sumbadoerson;
+
+            // คำนวณ % ผู้ได้รับผลกระทบ (ป้องกันการหารด้วย 0)
+            if (sumperson > 0) {
+                BadPerson_pser = (int) Math.round(((double) sumbadoerson / sumperson) * 100.0);
+            } else {
+                BadPerson_pser = 0;
+            }
+
+            title.setText("รายละเอียดพื้นที่ : ภาพรวมทั้งหมด");
+
+            // คำนวณค่าเฉลี่ย PM2.5
+            if (validPmCount > 0) {
+                double avgPm = (double) sumpm / validPmCount;
+                pm_val.setText(String.format("%.1f pm avg", avgPm));
+            } else {
+                pm_val.setText("0 pm avg");
+            }
         }
+
+        
+
         
         person.setText(String.valueOf(person_val)  + " คน");
         lbl_sick_val.setText(String.valueOf(badoerson)  + " คน");
         lbl_healthy_val.setText(String.valueOf(healthy)  + " คน");
-        lbl_per_val.setText(String.valueOf(btn_click.GetBadPerson_per())  + " %");
+        lbl_per_val.setText(String.valueOf(BadPerson_pser)  + " %");
         resetallBackGround();
     }
 
