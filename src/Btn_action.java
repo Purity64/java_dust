@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.awt.event.MouseEvent;
 
+import util.Alert;
 import util.RoundeBtn;
 import util.RoundedTextField;
 
@@ -34,20 +36,30 @@ public class Btn_action {
         });
 
         for (int i = 0; i < btn_list.size(); i++) {
-            int index = i;
             RoundeBtn btn = GetComponentBtn(i);
+            int index = i;
             if (btn != null) {
                 btn.addActionListener(e -> {
-                    if (Config.btn_togat_rain_make){
-                        makerain(btn.getX_location(), btn.getY_location());
+                
+                if (Config.btn_togat_rain_make) {
+                    makerain(btn.getX_location(), btn.getY_location());
+                    if (Config.activate_btn >= 0) {
                         RoundeBtn btn_temp = GetComponentBtn(Config.activate_btn);
+                        if (btn_temp != null) {
+                            Config.activate_btn = -1;
+                            btn_temp.resetBackground();
+                        }
+                    }
+                }else{
+                    if(Config.activate_btn == index){
                         Config.activate_btn = -1;
-                        btn_temp.resetBackground();
-                        set_text.setDetail_data(); 
                     }else{
                         Config.activate_btn = index;
-                        set_text.setDetail_data();   
                     }
+                     
+                }
+
+                set_text.setDetail_data(); 
                 });
 
                 btn.addMouseListener(new MouseAdapter() {
@@ -101,10 +113,14 @@ public class Btn_action {
             int min = GetFildText_to_number(input_min_person_random);
             int max = GetFildText_to_number(input_max_person_random);
 
-            if (min >= 0 & max >= 0) {
+            if (min >= 0 && max >= 0) {
                 RoundeBtn btn;
+                ArrayList<Integer> temparr = random_person(min , max);
+                if (temparr.size() < 800) {
+                    return;
+                }
                 for (int i = 0; i < 800; i++) {
-                    int new_person = ThreadLocalRandom.current().nextInt(min, max + 1);
+                    int new_person = temparr.get(i);
                     btn = GetComponentBtn(i);
                     btn.setPerson(new_person);
                     btn.calculatePerson();
@@ -173,12 +189,26 @@ public class Btn_action {
         return null;
     }
 
-    public int GetFildText_to_number(RoundedTextField Field){
-        String num = Field.getText();
-        if (Integer.parseInt(num) >= 0) {
-            int new_num = (int)Integer.parseInt(num);
-            return new_num;
+    public int GetFildText_to_number(RoundedTextField field) {
+
+        String text = field.getText().trim();
+
+        if (text.isEmpty()) {
+            Alert.warnMessage("กรุณากรอกตัวเลข");
+            return -1;
         }
+
+        try {
+            int number = Integer.parseInt(text);
+
+            if (number >= 0) {
+                return number;
+            }
+
+        } catch (NumberFormatException e) {
+            Alert.warnMessage("กรุณากรอกตัวเลขให้ถูกต้อง");
+        }
+
         return -1;
     }
 
@@ -250,6 +280,34 @@ public class Btn_action {
         }
         activeHoverBtns.clear(); 
     }
+    
+    private ArrayList<Integer> random_person(int min, int max) {
+
+        if (min > max) {
+            Alert.warnMessage("ค่าต่ำสุดต้องน้อยกว่าค่าสูงสุด");
+            return new ArrayList<>();
+        }
+        int amount = 800;
+
+        if ((long) max - min + 1 < amount) {
+            Alert.warnMessage("ช่วงตัวเลขต้องมีอย่างน้อย 800 ค่า");
+            return new ArrayList<>();
+        }
+
+        HashSet<Integer> uniqueNumbers = new HashSet<>();
+
+        while (uniqueNumbers.size() < amount) {
+
+            int randomNumber = ThreadLocalRandom.current()
+                    .nextInt(min, max + 1);
+
+            uniqueNumbers.add(randomNumber);
+        }
+
+        return new ArrayList<>(uniqueNumbers);
+    }
+
+
 
 
         

@@ -49,22 +49,7 @@ public class ReadFile {
                         }
                         i++;
                     }
-                    // for(String el : text){
 
-                    //     try {
-                    //         int pmValue = Integer.parseInt(el);
-                    //         if (pmValue >= 0 && pmValue <= 250) {
-                    //             pmList[i] = pmValue;
-                    //         }else{
-                    //             pmList[i] = -1;
-                    //         }
-                            
-                                
-                    //     } catch (NumberFormatException e) {
-                    //          pmList[i] = -1;
-                    //     }
-                    //     i++;
-                    // }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
