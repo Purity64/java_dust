@@ -12,18 +12,23 @@ public class Calculate {
         ArrayList<ArrayList> maiArrayList = new ArrayList<>();
         arr.add(x + "," + y);
         arr.add( x + "," + ( ChackMin(y, 1)));
-        arr.add( x + "," +  (ChackMax(y, 1, 40)));
+
+        arr.add( x + "," +  (ChackMax(y, 1, 39)));
 
         arr2.add(x + "," + (ChackMin(y, 1)));
-        arr2.add( x + "," + (ChackMax(y, 1, 40)));
+        arr2.add( x + "," + (ChackMax(y, 1, 39)));
 
         int initialSize = arr.size(); 
         for (int i = 0; i < initialSize; i++) {
             int temparr[] = spiltBox(arr.get(i));
             int temparrX = temparr[0];
             int temparrY = temparr[1];
-
-            arr2.add((ChackMax(temparrX, 1, 20)) + "," + temparrY);
+            if (temparrX < 0 || temparrY < 0) {
+                continue;
+            }
+            int w = ChackMax(temparrX, 1, 19);
+     
+            arr2.add(w+ "," + temparrY);
             arr2.add((ChackMin(temparrX, 1)) + "," + temparrY);
         }
 
@@ -32,9 +37,12 @@ public class Calculate {
             int temparr[] = spiltBox(full_location);
             int temp_x = temparr[0];
             int temp_y = temparr[1];
+            if (temp_x < 0 || temp_y < 0) {
+                continue;
+            }
             if (i == 0) {
                 arr3.add( ( ChackMin(temp_x,  2)) + "," + temp_y);
-                arr3.add( ( ChackMax(temp_x, 2, 20) ) + "," + temp_y);
+                arr3.add( ( ChackMax(temp_x, 2, 19) ) + "," + temp_y);
 
             }else {
               
@@ -42,8 +50,8 @@ public class Calculate {
                 tempArr.add(full_location);
                 tempArr.add(( ChackMin(temp_x, 1)) + "," + temp_y);
                 tempArr.add(( ChackMin(temp_x,  2)) + "," + temp_y);
-                tempArr.add(( ChackMax(temp_x , 1 , 20)) + "," + temp_y);
-                tempArr.add(( ChackMax(temp_x, 2, 20) ) + "," + temp_y);
+                tempArr.add(( ChackMax(temp_x , 1 , 19)) + "," + temp_y);
+                tempArr.add(( ChackMax(temp_x, 2, 19) ) + "," + temp_y);
 
                     for (int j = 0; j < tempArr.size(); j++) {
                         int temparrSplit[] = spiltBox(tempArr.get(j));
@@ -53,12 +61,12 @@ public class Calculate {
                         if (i == 1) {
                             arr3.add(tempArrX + "," + (ChackMin(tempArrY, 1)));
                         }else{
-                             arr3.add(tempArrX + "," + (ChackMax(tempArrY, 1, 40)));
+                             arr3.add(tempArrX + "," + (ChackMax(tempArrY, 1, 39)));
                         }
                     }
 
                     arr3.add(( ChackMin(temp_x, 2) ) + "," + temp_y );
-                    arr3.add(( ChackMax(temp_x, 2, 20)) + "," + temp_y);
+                    arr3.add(( ChackMax(temp_x, 2, 19)) + "," + temp_y);
 
                 
             }

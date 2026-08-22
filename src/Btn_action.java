@@ -129,9 +129,12 @@ public class Btn_action {
                 if (pm >50) {
                     newPm = pm - 50;
                 }
-
-                btn.setPm(newPm);
-                btn.calculatePerson();
+                
+                if (newPm != 0) {
+                    btn.setPm(newPm);
+                    btn.calculatePerson();
+                }
+                
 
 
             }
@@ -218,6 +221,7 @@ public class Btn_action {
 
     private void BtnMap_Hover(ArrayList<String> arr, Color cor) {
         int GRID_COLS = 40; 
+        
 
         for (String a : arr) {
             String[] text = a.split(",");

@@ -29,25 +29,42 @@ public class ReadFile {
                 while ((line = reader.readLine()) != null) {
                     String trimmed = line.trim();
                     if (trimmed.isEmpty()) continue;
-                    String text[] = trimmed.split("\\s+");
+                    String[] text = line.split("\t", -1);
                     
-                    
-                    for(String el : text){
-
+                    for (int j = 0; j < 40; j++) {
                         try {
-                            int pmValue = Integer.parseInt(el);
-                            if (pmValue >= 0 && pmValue <= 250) {
-                                pmList[i] = pmValue;
+                            if (text.length > j) {
+                                int pmValue = Integer.parseInt(text[j]);
+                                if (pmValue >= 0 && pmValue <= 250) {
+                                    pmList[i] = pmValue;
+                                }else{
+                                    pmList[i] = -1; 
+                                }
                             }else{
-                                pmList[i] = -1;
+                                pmList[i] = -1; 
                             }
-                            
-                                
+
                         } catch (NumberFormatException e) {
                              pmList[i] = -1;
                         }
                         i++;
                     }
+                    // for(String el : text){
+
+                    //     try {
+                    //         int pmValue = Integer.parseInt(el);
+                    //         if (pmValue >= 0 && pmValue <= 250) {
+                    //             pmList[i] = pmValue;
+                    //         }else{
+                    //             pmList[i] = -1;
+                    //         }
+                            
+                                
+                    //     } catch (NumberFormatException e) {
+                    //          pmList[i] = -1;
+                    //     }
+                    //     i++;
+                    // }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
