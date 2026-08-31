@@ -2,18 +2,24 @@ package src;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.swing.SwingUtilities;
 
 import java.awt.event.MouseEvent;
 
 import util.Alert;
-import util.RoundeBtn;
+import util.History_screen;
 import util.RoundedTextField;
+import util.btn.RoundeBtn;
 
 public class Btn_action {
     private Map<Integer, RoundeBtn> btn_list;
@@ -144,12 +150,14 @@ public class Btn_action {
                 int newPm = 0;
                 if (pm >50) {
                     newPm = pm - 50;
+                }else {
+                    newPm = 0;
                 }
                 
-                if (newPm != 0) {
+
                     btn.setPm(newPm);
                     btn.calculatePerson();
-                }
+                
                 
 
 
@@ -163,6 +171,17 @@ public class Btn_action {
             Config.btn_togat_rain_make = !Config.btn_togat_rain_make;
             rain_make_Btn.resetBackground();
         });
+
+        //ประวัติ
+        RoundeBtn btn_history = switchType(GetComponent("btn_center_Btn_history"));
+        btn_history.addActionListener(e -> {
+            Window parentWindow = SwingUtilities.getWindowAncestor(btn_history);
+            History_screen dialog = new History_screen(parentWindow, "" , set_text);
+            dialog.setVisible(true);
+
+        });
+
+
     }
 
 
@@ -212,14 +231,59 @@ public class Btn_action {
         return -1;
     }
 
-    public void makerain(int x , int y){
-        ArrayList<ArrayList> mainarr =  Calculate.calculate_area(x , y);
-        BtnMap_update(mainarr.get(0) , 50);
-        BtnMap_update(mainarr.get(1) , 25);
-        BtnMap_update(mainarr.get(2) , 10);
-    }
+    public void makerain(int x, int y) {
+        Map<Integer, RoundeBtn> addToHistory = new HashMap<>();
+        Map<Integer, RoundeBtn> Copy_Main_Btn = Config.CopyMain_btn;
+        Copy_Main_Btn.clear();
+        for (Map.Entry<Integer, RoundeBtn> entry : btn_list.entrySet()) {
+            RoundeBtn originalBtn = entry.getValue();
+            int originalPm = originalBtn.getPm();
+            
+            RoundeBtn clonedBtn = new RoundeBtn(originalBtn.getPm() + "" , 20 , true);
+            RoundeBtn clonedBtnMain = new RoundeBtn(originalBtn.getPm() + "" , 20 , true);
+            clonedBtn.setPm(originalPm); 
+            clonedBtnMain.setPm(originalPm);
 
-    private void BtnMap_update(ArrayList<String> arr ,int pm_per){
+            Copy_Main_Btn.put(entry.getKey(), clonedBtnMain);
+            addToHistory.put(entry.getKey(), clonedBtn);
+        }
+
+        
+
+        ArrayList<ArrayList> mainarr = Calculate.calculate_area(x, y);
+
+        Set<Integer> hoverset = new HashSet<>();
+        BtnMap_update(mainarr.get(0), 50 , hoverset);
+        BtnMap_update(mainarr.get(1), 25 , hoverset);
+        BtnMap_update(mainarr.get(2), 10 , hoverset);
+
+        Config.history_hover.add(hoverset);
+
+        for (Map.Entry<Integer, RoundeBtn> entry : btn_list.entrySet()) {
+            RoundeBtn originalBtn = entry.getValue();
+            int originalPm = originalBtn.getPm();
+
+            
+            RoundeBtn clonedBtnMain = new RoundeBtn(originalBtn.getPm() + "" , 20 , true);
+            clonedBtnMain.setPm(originalPm);
+            
+            Copy_Main_Btn.put(entry.getKey(), clonedBtnMain);
+        }
+
+     
+        for (int i = 0; i < addToHistory.size(); i++) {
+            RoundeBtn btn = addToHistory.get(i);
+            RoundeBtn originalBtn = btn_list.get(i);
+            int originalPm = originalBtn.getPm();
+
+            btn.setOldBadperdon_per(originalBtn.GetBadPerson_per());
+            btn.setOldPm(originalPm);
+        }
+
+        Config.history_btn.add(addToHistory);
+    }
+    private void BtnMap_update(ArrayList<String> arr ,int pm_per , Set<Integer> mySet){
+
         for (int i = 0; i < btn_list.size(); i++) {
             RoundeBtn btn = btn_list.get(i);
             int main_x = btn.getX_location();
@@ -235,10 +299,13 @@ public class Btn_action {
                 if (main_x == arr_X && arr_Y == main_y) {
                     int basePm = btn.getPm();
                     btn.setPm(basePm - Math.round(basePm * pm_per / 100));
+                    mySet.add(btn.getIndex());
                 }
 
             }
         }
+
+
     }
 
     private void HoverBtn_rainMake(int x , int y){

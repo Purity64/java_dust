@@ -4,7 +4,7 @@ import src.Btn_action;
 import src.Config;
 import src.Set_text;
 import util.RoundedBox;
-import util.RoundeBtn;
+import util.btn.RoundeBtn;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -14,14 +14,12 @@ import java.util.Map;
 
 public class Main extends JFrame {
     private Map<String, Component> componentMap = new HashMap<>();
-    private Map<Integer, RoundeBtn> Btn_pn_Map = new HashMap<>();
+    private Map<Integer, RoundeBtn> Btn_pn_Map = Config.main_btn;
     Ui ui = new Ui();
     public Main() {
         Config cf = new Config();
         BuildBox buildBox = new BuildBox();
     
-        
-        
         setTitle("purity_dust");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
@@ -33,6 +31,7 @@ public class Main extends JFrame {
         JPanel box1 , box2 ;
         box1 = new JPanel();
         box2  = new JPanel();
+        
         componentMap.put("MainBoxLeft", box1);
         componentMap.put("MainBoxRight", box2);
         RoundedBox boxin_box1 = new RoundedBox( 30 , 6);

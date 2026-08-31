@@ -1,16 +1,14 @@
-package util;
+package util.btn;
 
 import java.awt.*;
 import src.Config;
+
 import java.util.concurrent.ThreadLocalRandom;
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-public class RoundeBtn extends JButton {
-    private int cornerRadius;
-    private int shadowSize = 4; 
-    private boolean onShadow = false;
-    private Color shadowColor = new Color(0, 0, 0, 50); 
+public class RoundeBtn extends MainBtn {
+
+    
 
     private int x_location = -1;
     private int y_location  = -1;
@@ -27,6 +25,11 @@ public class RoundeBtn extends JButton {
 
     private String name;
     private int location = -1;
+
+    private int OldPm;
+    private int OldBadperdon_per;
+
+    private boolean isActivate = false;
     
 
     public RoundeBtn(String pm, int radius) {
@@ -40,7 +43,7 @@ public class RoundeBtn extends JButton {
         } catch (NumberFormatException e) {
             this.pm = -1; 
         }
-        this.cornerRadius = radius;
+        super.setRounded(radius);
         this.isRandom = isRandom;
 
         setHorizontalAlignment(SwingConstants.CENTER);
@@ -50,18 +53,17 @@ public class RoundeBtn extends JButton {
         setBorderPainted(false);
         setBackground(Color.WHITE);
         setOpaque(false);
-        setFont(new Font("Leelawadee UI", Font.PLAIN, 20));
+        
 
         if (this.isRandom) {
-            this.person = 10000;
+            this.person = 3000;
             calculatePerson();
         }
     }
 
     public RoundeBtn(String pm, int radius, boolean onShadow, int shadowSize) {
         this(pm, radius, false);
-        this.shadowSize = shadowSize;
-        this.onShadow = onShadow;
+        super.setShadow(onShadow, shadowSize);
     }
 
     public void setShadow(Boolean isShadow){
@@ -69,27 +71,38 @@ public class RoundeBtn extends JButton {
     }
     public void calculatePerson() {
         int max = 0, min = 0;
-        if (this.pm > 150 ) {
-            max = 50;
-            min = 30;
-        } else if (this.pm > 100) {
-            max = 29;
-            min = 20;
-        } else if (this.pm > 50) {
-            max = 19;
-            min = 10;
-        } else if (this.pm >= this.min_pm) {
-            max = 9;
-            min = 0;
+        int pm_per = 0;
+        if (this.pm == 0) {
+            
+        }else{
+            if (this.pm > 150 ) {
+                max = 50;
+                min = 30;
+            } else if (this.pm > 100) {
+                max = 29;
+                min = 20;
+            } else if (this.pm > 50) {
+                max = 19;
+                min = 10;
+            } else if (this.pm >= this.min_pm) {
+                max = 9;
+                min = 0;
+            }
+
+            pm_per = ThreadLocalRandom.current().nextInt(min, max + 1);
         }
 
-        int pm_per = ThreadLocalRandom.current().nextInt(min, max + 1);
+ 
         this.badperson = (int) Math.round((double) this.person * pm_per / 100.0);
         this.badperson_per = pm_per ;
         if(!Config.btn_togat_rain_make) resetBackground();
     }
 
     public void resetBackground() {
+        if (isActivate) {
+            setBackground(Color.BLUE);
+            return;
+        }
         if ( this.name == "btn_center_Rain_make") {
             if (Config.btn_togat_rain_make ) {
                 setBackground(Color.blue);
@@ -181,41 +194,29 @@ public class RoundeBtn extends JButton {
         return this.y_location;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        int width = getWidth();
-        int height = getHeight();
-
-        int btnWidth = onShadow ? width - shadowSize : width;
-        int btnHeight = onShadow ? height - shadowSize : height;
-
-        if (onShadow) {
-            g2.setColor(shadowColor);
-            g2.fillRoundRect(
-                shadowSize / 2, 
-                shadowSize, 
-                btnWidth, 
-                btnHeight, 
-                cornerRadius, 
-                cornerRadius
-            );
-        }
-
-        Color bg = getBackground() != null ? getBackground() : Color.WHITE;
-        if (!Config.btn_togat_rain_make && getModel().isPressed()) {
-            g2.setColor(bg.darker());
-        } else if (!Config.btn_togat_rain_make && getModel().isRollover()) {
-            g2.setColor(bg.brighter());
-        } else {
-            g2.setColor(bg); 
-        }
-
-        g2.fillRoundRect(0, 0, btnWidth, btnHeight, cornerRadius, cornerRadius);
-        g2.dispose();
-
-        super.paintComponent(g);
+    public void setOldPm(int OldPm){
+        this.OldPm = OldPm;
     }
+
+    public int getOldPm(){
+        return this.OldPm;
+    }
+
+    public void setisActivate(boolean status){
+        this.isActivate = status;
+    }
+
+    public boolean isActivate(){
+        return this.isActivate;
+    }
+
+    public void setOldBadperdon_per(int OldBadperdon_per){
+        this.OldBadperdon_per = OldBadperdon_per;
+    }
+
+    public int getOldBadperdon_per(){
+        return this.OldBadperdon_per;
+    }
+
+
 }

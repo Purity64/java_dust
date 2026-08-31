@@ -3,9 +3,9 @@ import java.util.Map;
 import javax.swing.*;
 
 import src.Config;
-import util.RoundeBtn;
 import util.RoundedBox;
 import util.RoundedTextField;
+import util.btn.RoundeBtn;
 
 public class BuildBox {
     
@@ -16,23 +16,23 @@ public class BuildBox {
         main_blox.repaint();
     }
 
-private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
-    int index = 0;
+    private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
+        int index = 0;
 
-    for (int i = 0; i < 20; i++) {
-        char rowChar = (char) ('A' + i); 
-        for (int j = 0; j < 40; j++) {
-            RoundeBtn btn = box(main_blox, "0");
-            btn.setX_location(i);
-            btn.setY_location(j);
-            String btnName = "" + rowChar + (j + 1);
-            btn.setName(btnName);
-            btn.setIndex(index);
-            btnMap.put(index, btn);
-            index++;
+        for (int i = 0; i < 20; i++) {
+            char rowChar = (char) ('A' + i); 
+            for (int j = 0; j < 40; j++) {
+                RoundeBtn btn = box(main_blox, "0");
+                btn.setX_location(i);
+                btn.setY_location(j);
+                String btnName = "" + rowChar + (j + 1);
+                btn.setName(btnName);
+                btn.setIndex(index);
+                btnMap.put(index, btn);
+                index++;
+            }
         }
     }
-}
 
     private RoundeBtn box(JPanel main_blox, String num) {
         RoundeBtn btn = new RoundeBtn(num, 10, true);
@@ -45,7 +45,7 @@ private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
     }
 
     public void createRightBox(JPanel main_box, Config cf, Map<String, Component> map) {
-        RoundeBtn Btn_top_manu_left, Btn_top_manu_right, btn_center_Rain_make, btn_center_Rain, btn_submit_input_person, btn_submit_input_person_static , btn_submit_input_file;
+        RoundeBtn Btn_top_manu_left, Btn_top_manu_right, btn_center_Rain_make, btn_center_Rain, btn_submit_input_person, btn_submit_input_person_static , btn_submit_input_file , Btn_history;
         RoundedBox Boxtop, Box_center_detail, box_center_rain, box_button_input_area, box_bottom_input_person_stantic , box_input_file;
         RoundedTextField input_min_personal, input_max_personal, input_personal ;
         JLabel label_box_button_input_area;
@@ -64,6 +64,7 @@ private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
 
         btn_center_Rain_make = new RoundeBtn("ฝนเทียม", 20, true, 4);
         btn_center_Rain = new RoundeBtn("ฝนธรรมชาติ", 20, true, 4);
+        Btn_history = new RoundeBtn("ประวัต", 20 , true , 4);
 
         input_min_personal = new RoundedTextField("0", 5, 20);
         label_box_button_input_area = new JLabel("-");
@@ -176,6 +177,7 @@ private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
 
         box_center_rain.add(btn_center_Rain_make, gbc);
         box_center_rain.add(btn_center_Rain, gbc);
+        box_center_rain.add(Btn_history , gbc);
 
         box_button_input_area.add(input_min_personal, gbc);
         box_button_input_area.add(label_box_button_input_area);
@@ -213,6 +215,7 @@ private void spawnBox(JPanel main_blox, Map<Integer, RoundeBtn> btnMap) {
         map.put("box_center_rain", box_center_rain);
         map.put("btn_center_Rain", btn_center_Rain);
         map.put("btn_center_Rain_make", btn_center_Rain_make);
+        map.put("btn_center_Btn_history", Btn_history);
 
         map.put("Box_in_Right_center_detail", Box_center_detail);
         

@@ -2,7 +2,7 @@ package src;
 
 import java.util.Map;
 
-import util.RoundeBtn;
+import util.btn.RoundeBtn;
 
 public class Set_btn_view_pm {
     Map<Integer, RoundeBtn> btn_list;
@@ -20,5 +20,6 @@ public class Set_btn_view_pm {
             RoundeBtn btn = this.btn_list.get(i);
             btn.setPm(pm[i]);
         }
+
     }
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 
-import util.RoundeBtn;
+import util.btn.RoundeBtn;
 
 public class Set_text {
     private Map<Integer, RoundeBtn> btn_list;
@@ -32,6 +32,8 @@ public class Set_text {
         int healthy = 0;
         int pm  = 0;
         int BadPerson_pser = 0;
+        int oldpm = 0;
+        int oldBadperson_per = 0;
         if (index >= 0) {
             RoundeBtn btn_click = btn_list.get(index);
             if (btn_click != null) {
@@ -39,20 +41,41 @@ public class Set_text {
                 badoerson = btn_click.GetBadPerson();
                 healthy = person_val - badoerson;
                 pm = btn_click.getPm();
+                oldpm = btn_click.getOldPm();
                 BadPerson_pser = btn_click.GetBadPerson_per();
+                oldBadperson_per = btn_click.getOldBadperdon_per();
+
 
                 title.setText("รายละเอียดพื้นที่ : " + btn_click.getName());
-                if (pm < 0) {
-                    pm_val.setText("0 pm");
-                } else {
-                    pm_val.setText(pm + " pm");
+                if (Config.is_show_history) {
+                    if (btn_click.isActivate()) {
+                        if (oldpm < 0) {
+                            pm_val.setText(pm + " -> 0 pm");
+                        } else {
+                            pm_val.setText( pm + " -> " + oldpm + " pm");
+                        }
+                    }else{
+                        if (pm < 0) {
+                            pm_val.setText("0 pm");
+                        } else {
+                            pm_val.setText( pm + " pm");
+                        }
+                    }
+
+                }else{
+                    if (pm < 0) {
+                        pm_val.setText("0 pm");
+                    } else {
+                        pm_val.setText(pm + " pm");
+                    }
                 }
+
             }
         } else {
             int sumperson = 0;
             int sumbadoerson = 0;
             int sumpm = 0;
-            int validPmCount = 0; // นับเฉพาะปุ่มที่มีข้อมูลฝุ่นจริง
+            int validPmCount = 0; 
 
             for (int i = 0; i < btn_list.size(); i++) {
                 RoundeBtn btn = btn_list.get(i);
@@ -61,7 +84,7 @@ public class Set_text {
                     sumbadoerson += btn.GetBadPerson();
 
                     int currentPm = btn.getPm();
-                    if (currentPm >= 0) { // นับเฉพาะค่าฝุ่นที่ไม่ใช่ -1
+                    if (currentPm >= 0) { 
                         sumpm += currentPm;
                         validPmCount++;
                     }
@@ -72,7 +95,6 @@ public class Set_text {
             badoerson = sumbadoerson;
             healthy = sumperson - sumbadoerson;
 
-            // คำนวณ % ผู้ได้รับผลกระทบ (ป้องกันการหารด้วย 0)
             if (sumperson > 0) {
                 BadPerson_pser = (int) Math.round(((double) sumbadoerson / sumperson) * 100.0);
             } else {
@@ -81,7 +103,6 @@ public class Set_text {
 
             title.setText("รายละเอียดพื้นที่ : ภาพรวมทั้งหมด");
 
-            // คำนวณค่าเฉลี่ย PM2.5
             if (validPmCount > 0) {
                 double avgPm = (double) sumpm / validPmCount;
                 pm_val.setText(String.format("%.1f pm avg", avgPm));
@@ -91,12 +112,22 @@ public class Set_text {
         }
 
         
+        if (Config.is_show_history) {
+            int olt_bad_person_val = (int) Math.round((double) person_val * oldBadperson_per / 100.0);
+            int olt_healthy =  person_val - olt_bad_person_val;
+            person.setText(  person_val  + " คน");
+            lbl_sick_val.setText( olt_bad_person_val + " -> " + badoerson  + " คน");
+            lbl_healthy_val.setText( olt_healthy + " -> " + healthy  + " คน");
+            lbl_per_val.setText(oldBadperson_per + " -> " + BadPerson_pser  + " %");
 
+        }else{
+            person.setText(String.valueOf(person_val)  + " คน");
+            lbl_sick_val.setText(String.valueOf(badoerson)  + " คน");
+            lbl_healthy_val.setText(String.valueOf(healthy)  + " คน");
+            lbl_per_val.setText(String.valueOf(BadPerson_pser)  + " %");
+        }
         
-        person.setText(String.valueOf(person_val)  + " คน");
-        lbl_sick_val.setText(String.valueOf(badoerson)  + " คน");
-        lbl_healthy_val.setText(String.valueOf(healthy)  + " คน");
-        lbl_per_val.setText(String.valueOf(BadPerson_pser)  + " %");
+
         resetallBackGround();
     }
 
