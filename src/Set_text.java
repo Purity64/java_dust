@@ -54,6 +54,14 @@ public class Set_text {
                         } else {
                             pm_val.setText( pm + " -> " + oldpm + " pm");
                         }
+
+
+                        int olt_bad_person_val = (int) Math.round((double) person_val * oldBadperson_per / 100.0);
+                        int olt_healthy =  person_val - olt_bad_person_val;
+                        person.setText(  person_val  + " คน");
+                        lbl_sick_val.setText( olt_bad_person_val + " -> " + badoerson  + " คน");
+                        lbl_healthy_val.setText( olt_healthy + " -> " + healthy  + " คน");
+                        lbl_per_val.setText(oldBadperson_per + " -> " + BadPerson_pser  + " %");
                     }else{
                         if (pm < 0) {
                             pm_val.setText("0 pm");
@@ -112,19 +120,12 @@ public class Set_text {
         }
 
         
-        if (Config.is_show_history) {
-            int olt_bad_person_val = (int) Math.round((double) person_val * oldBadperson_per / 100.0);
-            int olt_healthy =  person_val - olt_bad_person_val;
-            person.setText(  person_val  + " คน");
-            lbl_sick_val.setText( olt_bad_person_val + " -> " + badoerson  + " คน");
-            lbl_healthy_val.setText( olt_healthy + " -> " + healthy  + " คน");
-            lbl_per_val.setText(oldBadperson_per + " -> " + BadPerson_pser  + " %");
-
-        }else{
+        if (!Config.is_show_history) {
             person.setText(String.valueOf(person_val)  + " คน");
             lbl_sick_val.setText(String.valueOf(badoerson)  + " คน");
             lbl_healthy_val.setText(String.valueOf(healthy)  + " คน");
             lbl_per_val.setText(String.valueOf(BadPerson_pser)  + " %");
+
         }
         
 

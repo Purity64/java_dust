@@ -14,7 +14,6 @@ public class RoundeBtn extends MainBtn {
     private int y_location  = -1;
 
     private int min_pm = 0;
-    private int max_pm = 250;
     private int pm = -1;
 
     private boolean isRandom = false;
@@ -67,7 +66,7 @@ public class RoundeBtn extends MainBtn {
     }
 
     public void setShadow(Boolean isShadow){
-        this.onShadow = isRandom;
+        this.onShadow = isShadow;
     }
     public void calculatePerson() {
         int max = 0, min = 0;

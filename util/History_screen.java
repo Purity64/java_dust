@@ -7,8 +7,7 @@ import util.btn.BtnHistory;
 import util.btn.Btn_Empty;
 import util.btn.RoundeBtn;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -170,7 +169,12 @@ public class History_screen extends JDialog {
     private void setAction(BtnHistory btn){
         btn.addActionListener(e -> {
             Config.show_btn_key = btn.GetIndex();
-            Config.is_show_history = true;
+            if (Config.show_btn_key == -1) {
+                Config.is_show_history = false;
+            }else{
+                Config.is_show_history = true;
+            }
+            
             setHistoryBtnAll();
             Config.activate_btn = -1;
             set_text.setDetail_data();

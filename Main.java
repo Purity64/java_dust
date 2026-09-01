@@ -15,6 +15,9 @@ import java.util.Map;
 public class Main extends JFrame {
     private Map<String, Component> componentMap = new HashMap<>();
     private Map<Integer, RoundeBtn> Btn_pn_Map = Config.main_btn;
+
+    
+
     Ui ui = new Ui();
     public Main() {
         Config cf = new Config();
@@ -118,6 +121,8 @@ public class Main extends JFrame {
         });
         Set_text set_text = new Set_text(componentMap, Btn_pn_Map);
         Btn_action btn_action = new Btn_action(componentMap ,Btn_pn_Map , set_text);
+
+
     }
     public void ReSetSize( String key , int width , int height ){
         Component comp = componentMap.get(key);

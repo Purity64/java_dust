@@ -60,7 +60,7 @@ public class BuildBox {
         box_button_input_area = new RoundedBox(0);
 
         Btn_top_manu_left = new RoundeBtn("ฝุ่น", 20, true, 4);
-        Btn_top_manu_right = new RoundeBtn("ประชากร", 20, false, 0); 
+        Btn_top_manu_right = new RoundeBtn("ประชากร", 20, false, 4); 
 
         btn_center_Rain_make = new RoundeBtn("ฝนเทียม", 20, true, 4);
         btn_center_Rain = new RoundeBtn("ฝนธรรมชาติ", 20, true, 4);

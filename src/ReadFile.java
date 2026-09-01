@@ -8,16 +8,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class ReadFile {
 
-    private int pmList[] = new int[800];
+    private ArrayList<Integer> pmList = new ArrayList();
 
     public void selectAndReadFile(Component com) {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("text file (*.txt)", "txt");
         fileChooser.setFileFilter(filter);
+        pmList.clear();
 
         int result = fileChooser.showOpenDialog(com);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -25,29 +27,28 @@ public class ReadFile {
             
             try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
                 String line;
-                int i = 0;
                 while ((line = reader.readLine()) != null) {
                     String trimmed = line.trim();
                     if (trimmed.isEmpty()) continue;
-                    String[] text = line.split("\t", -1);
-                    
+                    String[] text = line.split("[\\t ]", -1);
+
                     for (int j = 0; j < 40; j++) {
                         try {
-                            if (text.length > j) {
+                            if (text.length > j ) {
                                 int pmValue = Integer.parseInt(text[j]);
                                 if (pmValue >= 0 && pmValue <= 250) {
-                                    pmList[i] = pmValue;
+                                    pmList.add(pmValue);
                                 }else{
-                                    pmList[i] = -1; 
+                                    pmList.add(-1) ; 
                                 }
                             }else{
-                                pmList[i] = -1; 
+                                pmList.add(-1) ; 
                             }
 
                         } catch (NumberFormatException e) {
-                             pmList[i] = -1;
+                            pmList.add(-1) ;
                         }
-                        i++;
+
                     }
 
                 }
@@ -58,7 +59,7 @@ public class ReadFile {
     }
 
 
-    public int[] getPM(){
+    public ArrayList<Integer> getPM(){
         return this.pmList;
     }
 }
